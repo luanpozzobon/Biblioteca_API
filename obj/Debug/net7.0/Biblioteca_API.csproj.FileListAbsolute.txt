@@ -69,3 +69,13 @@ C:\Users\luanp\OneDrive\02-Acadêmico\02-Trabalhos\Dev-Visual\Biblioteca_API\Bib
 C:\Users\luanp\OneDrive\02-Acadêmico\02-Trabalhos\Dev-Visual\Biblioteca_API\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.pdb
 C:\Users\luanp\OneDrive\02-Acadêmico\02-Trabalhos\Dev-Visual\Biblioteca_API\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.genruntimeconfig.cache
 C:\Users\luanp\OneDrive\02-Acadêmico\02-Trabalhos\Dev-Visual\Biblioteca_API\Biblioteca_API\obj\Debug\net7.0\ref\Biblioteca_API.dll
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.csproj.AssemblyReference.cache
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.AssemblyInfoInputs.cache
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.AssemblyInfo.cs
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.csproj.CoreCompileInputs.cache
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.dll
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\refint\Biblioteca_API.dll
+C:\Users\kenji\OneDrive\Área de Trabalho\Biblioteca_API\obj\Debug\net7.0\Biblioteca_API.pdb
