@@ -1,14 +1,13 @@
 using Biblioteca_API.models;
-using BIBLIOTECA_API.Models;
 using Microsoft.EntityFrameworkCore;
-public class BibliotecaDbContext : DbContext {
 
-    public DbSet<>? exemplo {get; set;}
+namespace Biblioteca_API.data;
+
+public class BibliotecaDbContext : DbContext {
+    public DbSet<StudyRoom>? StudyRoom {get; set;}
+    public DbSet<Supplier> Supplier { get; set;}
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        optionsBuilder.useSqlite("datasource=biblioteca.db; Cache=shared");
+        optionsBuilder.UseSqlite("datasource=biblioteca.db; Cache=shared");
     }
-
-    public DbSet<Emprestimo> Emprestimos { get; set;}
-    public DbSet<EditoraAfiliada> EditorasAfiliadas{ get; set;}
 }

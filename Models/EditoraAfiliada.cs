@@ -1,4 +1,4 @@
-namespace BIBLIOTECA_API.Models
+namespace Biblioteca_API.models
 {
     public class EditoraAfiliada
     {
