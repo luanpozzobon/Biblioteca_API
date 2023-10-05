@@ -1,10 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\controllers",
+    "\\Controller",
     "\\data",
     "\\models"
   ],
-  "SelectedNode": "\\controllers\\StudyRoomController.cs",
+  "SelectedNode": "\\Controller\\SupplierController.cs",
   "PreviewInSolutionExplorer": false
 }

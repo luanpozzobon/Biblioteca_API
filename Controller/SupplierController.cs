@@ -2,15 +2,18 @@
 using Biblioteca_API.models;
 using Biblioteca_API.data;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks; // Adicione esta diretiva para trabalhar com tarefas assíncronas
+using System.Net;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Biblioteca_API.Controller
 {
     [ApiController]
     [Route("supplier")]
-    public class SupplierController : ControllerBase // Herde de ControllerBase para evitar o erro no retorno NotFound()
+    public class SupplierController : ControllerBase
     {
         private BibliotecaDbContext _context;
 
@@ -21,7 +24,7 @@ namespace Biblioteca_API.Controller
 
         [HttpPost]
         [Route("new")]
-        public async Task<IActionResult> NewSupplier([FromForm] Supplier supplier) // Marque o método como assíncrono
+        public async Task<IActionResult> NewSupplier([FromForm] Supplier supplier)
         {
             if (_context is null || _context.Supplier is null)
                 return NotFound();
@@ -29,8 +32,8 @@ namespace Biblioteca_API.Controller
                 return BadRequest();
 
             await _context.AddAsync(supplier);
-            await _context.SaveChangesAsync(); // Use await aqui
-            return Created(nameof(NewSupplier), supplier); // Corrija o retorno para Created
+            await _context.SaveChangesAsync();
+            return Created("Adicionado novo fornecedor", supplier);
         }
 
         [HttpGet]
@@ -44,40 +47,93 @@ namespace Biblioteca_API.Controller
                 .Where(supplier => supplier.ContractStatus)
                 .ToListAsync();
 
-            return Ok(suppliers); // Use Ok() para retornar 200 OK com os dados
+            return Ok(suppliers);
         }
 
-        [HttpDelete]
-        [Route("delete-supplier/{id}")] // Note que definimos o tipo de parâmetro como int para maior segurança
-        public async Task<IActionResult> DeleteSupplier([FromRoute] int id)
+        [HttpGet]
+        [Route("name")]
+        public async Task<ActionResult<IEnumerable<Supplier>>> FindSupplierByName(string name)
         {
-            var supplier = await _context.Supplier.FindAsync(id);
-            if (supplier == null)
+            if (_context is null || _context.Supplier is null)
                 return NotFound();
+            if (name is null)
+                return BadRequest();
 
-            _context.Supplier.Remove(supplier);
-            await _context.SaveChangesAsync();
+            return await _context.Supplier
+                .Where(supplier => supplier.Name.Equals(name))
+                .ToListAsync();
 
-            return Ok(supplier);
         }
+
+        [HttpGet]
+        [Route("id")]
+        public async Task<ActionResult<Supplier>> FindSupplierById(int id)
+        {
+            if (_context is null || _context.Supplier is null)
+                return NotFound();
+            if (id <= 0)
+                return BadRequest();
+
+            return await _context.Supplier.FindAsync(id);
+        }
+
         [HttpPut]
-        [Route("update-supplier/{id}")]
-        public async Task<IActionResult> UpdateSupplier([FromRoute] int id, [FromForm] Supplier updateSupplier)
+        [Route("modify")]
+        public async Task<ActionResult<Supplier>> ModifySupplier([FromForm] Supplier supplier)
         {
-            var supplier = await _context.Supplier.FindAsync(id);
-            if (supplier == null)
+            if (_context is null || _context.Supplier is null)
                 return NotFound();
-
-            supplier.Name = updateSupplier.Name;
-            supplier.Contact = updateSupplier.Contact;
-            supplier.ContractStart = updateSupplier.ContractStart;
-            supplier.ContractEnd = updateSupplier.ContractEnd;
-            supplier.ContractStatus = updateSupplier.ContractStatus;
+            if (supplier is null)
+                return BadRequest();
 
             _context.Supplier.Update(supplier);
             await _context.SaveChangesAsync();
-
             return Ok(supplier);
+        }
+
+        [HttpPatch]
+        [Route("modify-contract")]
+        public async Task<ActionResult<Supplier>> ChangeSupplierContract([Required][FromForm] int id, 
+                                                                         [Required][FromForm] bool contractStatus,
+                                                                         [FromForm] DateTime? contractStart,
+                                                                         [FromForm] DateTime? contractEnd)
+        {
+            if (_context is null || _context.Supplier is null)
+                return NotFound();
+            if (id <= 0) 
+                return BadRequest("Id indicado fora do range!");
+            
+            var supplier = await _context.Supplier.FindAsync(id);
+            supplier.ContractStatus = contractStatus;
+
+            if (contractStart.HasValue)
+                supplier.ContractStart = contractStart.Value;
+            if (contractEnd.HasValue)
+                supplier.ContractEnd = contractEnd.Value;
+
+            _context.Supplier.Update(supplier);
+            await _context.SaveChangesAsync();
+            return Ok(supplier);
+        }
+
+        [HttpDelete]
+        [Route("delete-inactive")]
+        public async Task<ActionResult> DeleteSupplier([Required] int id)
+        {
+            if (_context is null || _context.Supplier is null)
+                return NotFound();
+            if (id <= 0)
+                return BadRequest("ID indicado fora do range!");
+
+            var supplier = await _context.Supplier.FindAsync(id);
+            if (supplier is null)
+                return NotFound();
+            if (supplier.ContractStatus)
+                return StatusCode(403, "Impossível deletar um fornecedor com contrato ativo!");
+
+            _context.Supplier.Remove(supplier);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
