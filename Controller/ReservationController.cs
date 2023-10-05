@@ -1,4 +1,3 @@
-/*
 using Microsoft.AspNetCore.Mvc;
 using Biblioteca_API.models;
 using Biblioteca_API.data;
@@ -22,14 +21,16 @@ namespace Biblioteca_API.Controllers
 
         [HttpPost]
         [Route("new-reservation")]
-        public async Task<IActionResult> NewReservation(Reservation reservation)
+        // Receber só o id do cliente e livro
+        public async Task<IActionResult> NewReservation([FromForm] Reservation reservation)
         {
-            if (reservation == null || string.IsNullOrEmpty(reservation.Pessoa.CPF) || reservation.Livro == null)
+            // Search do livro e cliente
+            if (reservation == null || string.IsNullOrEmpty(reservation.Client.Cpf) || reservation.Book == null)
                 return BadRequest("Reservation data is invalid.");
-            var book = await _context.Books.FindAsync(reservation.Livro.Id);
-            if (book != null && book.QuantidadeEmEstoque > 0)
+            var book = await _context.Book.FindAsync(reservation.Book.Id);
+            if (book != null && book.QuantStock > 0)
             {
-                book.QuantidadeEmEstoque--;
+                book.QuantStock--;
                 _context.Update(book);
             }
             else
@@ -37,17 +38,17 @@ namespace Biblioteca_API.Controllers
                 return BadRequest("Book not available in stock.");
             }
 
-            _context.Reservations.Add(reservation);
+            _context.Reservation.Add(reservation);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetReservation), new { id = reservation.IdReserva }, reservation);
+            return CreatedAtAction(nameof(GetReservation), new { id = reservation.ReservationId }, reservation);
         }
 
         [HttpGet]
         [Route("reservation/{id}")]
         public async Task<ActionResult<Reservation>> GetReservation(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservation.FindAsync(id);
             if (reservation == null)
                 return NotFound();
 
@@ -58,25 +59,25 @@ namespace Biblioteca_API.Controllers
         [Route("all-reservations")]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetAllReservations()
         {
-            return await _context.Reservations.ToListAsync();
+            return await _context.Reservation.ToListAsync();
         }
 
         [HttpPost]
         [Route("check-reservations")]
         public async Task<IActionResult> CheckReservations()
         {
-            var expiredReservations = _context.Reservations.Where(r => r.DataReserva < DateTime.Now && r.Situacao != "Vencido").ToList();
+            var expiredReservations = _context.Reservation.Where(r => r.ReservationDate < DateTime.Now && r.Status != "Vencido").ToList();
 
             foreach (var reservation in expiredReservations)
             {
-                var book = await _context.Books.FindAsync(reservation.Livro.Id);
+                var book = await _context.Book.FindAsync(reservation.Book.Id);
                 if (book != null)
                 {
-                    book.QuantidadeEmEstoque++;
+                    book.QuantStock++;
                     _context.Update(book);
                 }
-                reservation.Situacao = "Vencido";
-                _context.Reservations.Remove(reservation);
+                reservation.Status = "Vencido";
+                _context.Reservation.Remove(reservation);
             }
 
             await _context.SaveChangesAsync();
@@ -84,4 +85,3 @@ namespace Biblioteca_API.Controllers
         }
     }
 }
-*/

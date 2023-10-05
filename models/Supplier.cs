@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace Biblioteca_API.models;
@@ -10,9 +11,10 @@ public class Supplier
 	private string? _contact;
 	private DateTime _contractStart;
 	private DateTime _contractEnd;
-	private string? _contractStatus;
+	private bool _contractStatus;
 
 	[Key]
+	[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 	public int Id
 	{
 		get => _id;
@@ -46,7 +48,7 @@ public class Supplier
 	}
 
 	[Required]
-	public string ContractStatus
+	public bool ContractStatus
 	{
 		get => _contractStatus;
 		set => _contractStatus = value;

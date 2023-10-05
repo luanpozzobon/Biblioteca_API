@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Biblioteca_API.models
 {
@@ -7,10 +8,11 @@ namespace Biblioteca_API.models
     {
         
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReservationId { get; set; }
         public Client? Client { get; set; }
         public Book? Book { get; set; }
-        public String? Status { get; set; }
+        public string? Status { get; set; }
         public DateTime? ReservationDate { get; set; }
     }
 }

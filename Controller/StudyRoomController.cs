@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 [Route("/study-room")]
 public class StudyRoomController : ControllerBase
 {
-    private BibliotecaDbContext _context;
+    private readonly BibliotecaDbContext _context;
 
     public StudyRoomController(BibliotecaDbContext context)
     {
@@ -16,7 +16,7 @@ public class StudyRoomController : ControllerBase
 
     [HttpPost]
     [Route("new-room")]
-    public IActionResult NewRoom(StudyRoom studyRoom)
+    public IActionResult NewRoom([FromForm] StudyRoom studyRoom)
     {
         if (studyRoom == null)
             return BadRequest();

@@ -27,14 +27,9 @@ namespace Biblioteca_API.Controller
         [HttpGet("porLivro/{livroId}")]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimosPorLivro(int livroId)
         {
-            var emprestimos = await _context.Emprestimo
-                .Where(e => e.Book.Id == livroId)
-                .ToListAsync();
+            var emprestimos = await _context.Emprestimo.Where(e => e.Book.Id == livroId).ToListAsync();
 
-            if (emprestimos == null || emprestimos.Count == 0)
-            {
-                return NotFound();
-            }
+            if (emprestimos == null || emprestimos.Count == 0) { return NotFound(); }
 
             return emprestimos;
         }

@@ -19,7 +19,7 @@ namespace Biblioteca_API.Controllers
 
         [HttpPost]
         [Route("new-library")]
-        public IActionResult NewLibrary([FromForm]Library biblioteca)
+        public IActionResult NewLibrary([FromForm] Library biblioteca)
         {
             if (biblioteca == null)
                 return BadRequest();

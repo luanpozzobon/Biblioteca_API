@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Biblioteca_API.models
 {
@@ -10,6 +11,7 @@ namespace Biblioteca_API.models
         private int _quantBook;
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id
         {
             get => _id;

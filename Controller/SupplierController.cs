@@ -1,47 +1,50 @@
-﻿/*
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Biblioteca_API.models;
 using Biblioteca_API.data;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks; // Adicione esta diretiva para trabalhar com tarefas assíncronas
+using System.Linq;
 using System.Collections.Generic;
 
-[ApiController]
-[Route("/supplier")]
-public class SupplierController
+namespace Biblioteca_API.Controller
 {
-    private BibliotecaDbContext _context;
-
-    public StudyRoomController(BibliotecaDbContext context)
+    [ApiController]
+    [Route("supplier")]
+    public class SupplierController : ControllerBase // Herde de ControllerBase para evitar o erro no retorno NotFound()
     {
-        _context = context;
-    }
+        private BibliotecaDbContext _context;
 
-    [HttpPost]
-    [Route("new")]
-    public async IActionResult NewSupplier(Supplier supplier)
-    {
-        if (_context is null || _context.Supplier is null)
-            return NotFound();
-        if (supplier == null)
-            return BadRequest();
+        public SupplierController(BibliotecaDbContext context)
+        {
+            _context = context;
+        }
 
-        _context.Add(supplier);
-        _context.SaveChanges();
-        return Created(supplier);
-    }
+        [HttpPost]
+        [Route("new")]
+        public async Task<IActionResult> NewSupplier([FromForm] Supplier supplier) // Marque o método como assíncrono
+        {
+            if (_context is null || _context.Supplier is null)
+                return NotFound();
+            if (supplier == null)
+                return BadRequest();
 
-    [HttpGet]
-    [Route("current")]
-    public async Task<ActionResult<IEnumerable<Supplier>>> SearchSupplier()
-    {
-        if (_context is null || _context.Supplier is null)
-            return NotFound();
+            await _context.AddAsync(supplier);
+            await _context.SaveChangesAsync(); // Use await aqui
+            return Created(nameof(NewSupplier), supplier); // Corrija o retorno para Created
+        }
 
-        return await _context.Supplier
-            .Where(supplier => supplier.CurrentContract)
-            .ToListAsync();
+        [HttpGet]
+        [Route("current")]
+        public async Task<ActionResult<IEnumerable<Supplier>>> SearchSupplier()
+        {
+            if (_context is null || _context.Supplier is null)
+                return NotFound();
+
+            var suppliers = await _context.Supplier
+                .Where(supplier => supplier.ContractStatus)
+                .ToListAsync();
+
+            return Ok(suppliers); // Use Ok() para retornar 200 OK com os dados
+        }
     }
 }
-*/
