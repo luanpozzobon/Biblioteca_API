@@ -3,6 +3,7 @@ using System;
 using Biblioteca_API.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Biblioteca_API.Migrations
 {
     [DbContext(typeof(BibliotecaDbContext))]
-    partial class BibliotecaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231005133520_ReservationChanges")]
+    partial class ReservationChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -162,10 +165,10 @@ namespace Biblioteca_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("BookId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClientId")
+                    b.Property<int>("LivroId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("ReservationDate")
@@ -176,6 +179,10 @@ namespace Biblioteca_API.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("LivroId");
 
                     b.ToTable("Reservation");
                 });
@@ -268,6 +275,25 @@ namespace Biblioteca_API.Migrations
                     b.Navigation("livro");
 
                     b.Navigation("pessoa");
+                });
+
+            modelBuilder.Entity("Biblioteca_API.models.Reservation", b =>
+                {
+                    b.HasOne("Biblioteca_API.models.Client", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Biblioteca_API.models.Book", "Livro")
+                        .WithMany()
+                        .HasForeignKey("LivroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Livro");
                 });
 #pragma warning restore 612, 618
         }

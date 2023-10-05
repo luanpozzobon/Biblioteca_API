@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Biblioteca_API.Controllers
 {
@@ -21,27 +22,34 @@ namespace Biblioteca_API.Controllers
 
         [HttpPost]
         [Route("new-reservation")]
-        // Receber só o id do cliente e livro
-        public async Task<IActionResult> NewReservation([FromForm] Reservation reservation)
+        public async Task<IActionResult> NewReservation([Required][FromForm] int clientId, [Required][FromForm] int bookId)
         {
-            // Search do livro e cliente
-            if (reservation == null || string.IsNullOrEmpty(reservation.Client.Cpf) || reservation.Book == null)
-                return BadRequest("Reservation data is invalid.");
-            var book = await _context.Book.FindAsync(reservation.Book.Id);
-            if (book != null && book.QuantStock > 0)
-            {
-                book.QuantStock--;
-                _context.Update(book);
-            }
-            else
-            {
-                return BadRequest("Book not available in stock.");
-            }
+            if (_context is null || _context.Reservation is null)
+                return NotFound();
 
-            _context.Reservation.Add(reservation);
+            if (clientId <= 0)
+                return BadRequest("Id do cliente fora do range");
+            if (bookId <= 0)
+                return BadRequest("Id do livro fora do range");
+
+            var client = await _context.Client.FindAsync(clientId);
+            if (client is null)
+                return NotFound("Cliente não encontrado!");
+            var book = await _context.Book.FindAsync(bookId);
+            if (book is null)
+                return NotFound("Livro não encontrado!");
+
+            if (book.QuantStock <= 0)
+                return BadRequest("Book not available in stock.");
+
+            book.QuantStock--;
+            Reservation reservation = new Reservation(client.Id, book.Id, "Reservado", (DateTime.Now.AddDays(7)));
+
+            _context.Book.Update(book);
+            await _context.Reservation.AddAsync(reservation);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetReservation), new { id = reservation.ReservationId }, reservation);
+            return Created("Reserva criada com sucesso!", reservation);
         }
 
         [HttpGet]
@@ -66,11 +74,12 @@ namespace Biblioteca_API.Controllers
         [Route("check-reservations")]
         public async Task<IActionResult> CheckReservations()
         {
-            var expiredReservations = _context.Reservation.Where(r => r.ReservationDate < DateTime.Now && r.Status != "Vencido").ToList();
+            var expiredReservations = _context.Reservation
+                .Where(r => r.ReservationDate < DateTime.Now && r.Status != "Vencido").ToList();
 
             foreach (var reservation in expiredReservations)
             {
-                var book = await _context.Book.FindAsync(reservation.Book.Id);
+                var book = await _context.Book.FindAsync(reservation.BookId);
                 if (book != null)
                 {
                     book.QuantStock++;

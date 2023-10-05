@@ -6,6 +6,17 @@ namespace Biblioteca_API.models
 {
     public class Book 
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public string PublishingCompany { get; set; }
+        public string Genre { get; set; }
+        public int QuantStock { get; set; }
+        public string Synopsis { get; set; }
+
+        /*
         private int _id;
         private string? _title;
         private string? _author;
@@ -13,6 +24,7 @@ namespace Biblioteca_API.models
         private string? _genre;
         private int _quantStock;
         private string? _synopsis;
+
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -57,5 +69,6 @@ namespace Biblioteca_API.models
             get => _synopsis;
             set => _synopsis = value;
         }
+        */
     }
 }
