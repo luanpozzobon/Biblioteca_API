@@ -1,16 +1,21 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Biblioteca_API.models
 {
-    public class Biblioteca
+    public class Library
     {
+        private int _id;
         private int _quantEmployees;
         private int _quantBook;
-        private bool _status;
-        private DateTime _opened;
-        private DateTime _closed;
 
-
+        [Key]
+        public int Id
+        {
+            get => _id;
+            set => _id = value;
+        }
+    
         public int QuantEmployees
         {
             get => _quantEmployees;
@@ -21,24 +26,6 @@ namespace Biblioteca_API.models
         {
             get => _quantBook;
             set => _quantBook = value;
-        }
-
-        public bool Status
-        {
-            get => _status;
-            set => _status = value;
-        }
-
-        public DateTime Opened
-        {
-            get => _opened;
-            set => _opened = value;
-        }
-        
-        public DateTime Closed
-        {
-            get => _closed;
-            set => _closed = value;
         }
     }
 }

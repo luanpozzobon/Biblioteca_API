@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Biblioteca_API.models
 {
@@ -12,7 +13,7 @@ namespace Biblioteca_API.models
         private int _quantStock;
         private string? _synopsis;
 
-
+        [Key]
         public int Id 
         {
             get => _id;

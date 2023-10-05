@@ -1,6 +1,11 @@
-﻿using Biblioteca_API.models;
-using Microsoft.AspNetCore.Components;
+﻿/*
 using Microsoft.AspNetCore.Mvc;
+using Biblioteca_API.models;
+using Biblioteca_API.data;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 [ApiController]
 [Route("/supplier")]
@@ -39,3 +44,4 @@ public class SupplierController
             .ToListAsync();
     }
 }
+*/

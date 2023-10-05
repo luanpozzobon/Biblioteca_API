@@ -8,8 +8,8 @@ public class Supplier
 	private int _id;
 	private string? _name;
 	private string? _contact;
-	private DateTime? _contractStart;
-	private DateTime? _contractEnd;
+	private DateTime _contractStart;
+	private DateTime _contractEnd;
 	private string? _contractStatus;
 
 	[Key]

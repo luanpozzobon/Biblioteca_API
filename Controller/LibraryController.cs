@@ -1,11 +1,7 @@
+using Biblioteca_API.data;
+using Biblioteca_API.models;
 using Microsoft.AspNetCore.Mvc;
-using Biblioteca_API.Models;
-using Biblioteca_API.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace Biblioteca_API.Controllers
@@ -23,7 +19,7 @@ namespace Biblioteca_API.Controllers
 
         [HttpPost]
         [Route("new-library")]
-        public IActionResult NewLibrary(Biblioteca biblioteca)
+        public IActionResult NewLibrary([FromForm]Library biblioteca)
         {
             if (biblioteca == null)
                 return BadRequest();
@@ -35,17 +31,17 @@ namespace Biblioteca_API.Controllers
 
         [HttpGet]
         [Route("libraries")]
-        public async Task<ActionResult<IEnumerable<Biblioteca>>> GetAllLibraries()
+        public async Task<ActionResult<IEnumerable<Library>>> GetAllLibraries()
         {
-            var libraries = await _context.Libraries.ToListAsync();
+            var libraries = await _context.Library.ToListAsync();
             return Ok(libraries);
         }
 
         [HttpGet]
         [Route("library/{id}")]
-        public async Task<ActionResult<Biblioteca>> GetLibraryById([FromRoute] int id)
+        public async Task<ActionResult<Library>> GetLibraryById([FromRoute] int id)
         {
-            var library = await _context.Libraries.FindAsync(id);
+            var library = await _context.Library.FindAsync(id);
             if (library == null)
                 return NotFound();
 
@@ -54,19 +50,16 @@ namespace Biblioteca_API.Controllers
 
         [HttpPut]
         [Route("update-library/{id}")]
-        public IActionResult UpdateLibrary([FromRoute] int id, Biblioteca updatedLibrary)
+        public IActionResult UpdateLibrary([FromRoute] int id, Library updatedLibrary)
         {
-            var library = _context.Libraries.Find(id);
+            var library = _context.Library.Find(id);
             if (library == null)
                 return NotFound();
 
             library.QuantEmployees = updatedLibrary.QuantEmployees;
             library.QuantBook = updatedLibrary.QuantBook;
-            library.Status = updatedLibrary.Status;
-            library.Opened = updatedLibrary.Opened;
-            library.Closed = updatedLibrary.Closed;
 
-            _context.Libraries.Update(library);
+            _context.Library.Update(library);
             _context.SaveChanges();
 
             return Ok(library);
@@ -76,11 +69,11 @@ namespace Biblioteca_API.Controllers
         [Route("delete-library/{id}")]
         public IActionResult DeleteLibrary([FromRoute] int id)
         {
-            var library = _context.Libraries.Find(id);
+            var library = _context.Library.Find(id);
             if (library == null)
                 return NotFound();
 
-            _context.Libraries.Remove(library);
+            _context.Library.Remove(library);
             _context.SaveChanges();
 
             return NoContent();

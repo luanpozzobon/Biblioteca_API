@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using Biblioteca_API.models;
 using Biblioteca_API.data;
@@ -18,19 +19,19 @@ namespace Biblioteca_API.Controllers
         {
             _context = context;
         }
-
+        
         [HttpPost]
         [Route("new-client")]
-        public async Task<IActionResult> NewClient(Client client)
+        public async Task<IActionResult> NewClient([FromForm] Client client)
         {
-            if (client == null || string.IsNullOrEmpty(client.CPF))
+            if (client == null || string.IsNullOrEmpty(client.Cpf))
                 return BadRequest("Client data is invalid.");
 
-            var existingClient = await _context.Clients.FirstOrDefaultAsync(c => c.CPF == client.CPF);
+            var existingClient = await _context.Client.FirstOrDefaultAsync(c => c.Cpf == client.Cpf);
             if (existingClient != null)
                 return BadRequest("A client with this CPF already exists.");
 
-            _context.Clients.Add(client);
+            _context.Client.Add(client);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetClient), new { id = client.Id }, client);
@@ -40,7 +41,7 @@ namespace Biblioteca_API.Controllers
         [Route("client/{id}")]
         public async Task<ActionResult<Client>> GetClient(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
+            var client = await _context.Client.FindAsync(id);
             if (client == null)
                 return NotFound();
 
@@ -51,7 +52,7 @@ namespace Biblioteca_API.Controllers
         [Route("all-clients")]
         public async Task<ActionResult<IEnumerable<Client>>> GetAllClients()
         {
-            return await _context.Clients.ToListAsync();
+            return await _context.Client.ToListAsync();
         }
     }
 }

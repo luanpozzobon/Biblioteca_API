@@ -1,16 +1,16 @@
-namespace Biblioteca_API.Repositorios
+/*namespace Biblioteca_API.Repositorios
 {
     public class BookRepositorio : IBookRepositorio
     {
         private readonly Biblioteca_API _dbContext;
-        public BookRepositorio(BookDbContext)
+        public BookRepositorio(BibliotecaDbContext)
         {
-            _dbContext = BookDbContext;
+            _dbContext = BibliotecaDbContext;
         }
 
         public async Task<Book> BuscarPorId( int _id)
         {
-            return _dbContext.Book.FirstOrDefaultAsync(x => x._id == _id)
+            return _dbContext.Book.FirstOrDefaultAsync(x => x._id == _id);
         }
 
         public async Task<List<Book>> BuscarTodosOsLivros()
@@ -27,7 +27,7 @@ namespace Biblioteca_API.Repositorios
         }
         public async Task<Book> Atualizar(Book book, int _id)
         {
-            Book BookPorId = await BuscarPorId(_id)
+            Book BookPorId = await BuscarPorId(_id);
             if (BookPorId == null)
             {
                 throw new Exception($"Book para o id: {_id} Não foi encontrado no bacno de dados.");
@@ -46,7 +46,7 @@ namespace Biblioteca_API.Repositorios
         }
         public async Task<bool> Apagar(int _id)
         {
-            Book BookPorId = await BuscarPorId(_id)
+            Book BookPorId = await BuscarPorId(_id);
             if (BookPorId == null)
             {
                 throw new Exception($"Book para o id: {_id} Não foi encontrado no bacno de dados.");
@@ -59,3 +59,4 @@ namespace Biblioteca_API.Repositorios
         }
     }
 }
+*/

@@ -3,6 +3,7 @@ using System;
 using Biblioteca_API.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Biblioteca_API.Migrations
 {
     [DbContext(typeof(BibliotecaDbContext))]
-    partial class BibliotecaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231005015001_KaueBonitinho")]
+    partial class KaueBonitinho
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -139,50 +142,6 @@ namespace Biblioteca_API.Migrations
                     b.ToTable("Emprestimo");
                 });
 
-            modelBuilder.Entity("Biblioteca_API.models.Library", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("QuantBook")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("QuantEmployees")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Library");
-                });
-
-            modelBuilder.Entity("Biblioteca_API.models.Reservation", b =>
-                {
-                    b.Property<int>("ReservationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BookId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ReservationDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ReservationId");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("Reservation");
-                });
-
             modelBuilder.Entity("Biblioteca_API.models.StudyRoom", b =>
                 {
                     b.Property<int>("RoomNumber")
@@ -272,21 +231,6 @@ namespace Biblioteca_API.Migrations
                     b.Navigation("livro");
 
                     b.Navigation("pessoa");
-                });
-
-            modelBuilder.Entity("Biblioteca_API.models.Reservation", b =>
-                {
-                    b.HasOne("Biblioteca_API.models.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId");
-
-                    b.HasOne("Biblioteca_API.models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Client");
                 });
 #pragma warning restore 612, 618
         }
