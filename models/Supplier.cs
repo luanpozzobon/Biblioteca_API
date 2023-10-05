@@ -8,9 +8,8 @@ public class Supplier
 	private int _id;
 	private string? _name;
 	private string? _contact;
-	private DateTime _contractStart;
-	private DateTime _contractEnd;
-	private List<string>? _providedBooks; // TODO - Definir o tipo de dado {String / Livro}
+	private DateTime? _contractStart;
+	private DateTime? _contractEnd;
 	private string? _contractStatus;
 
 	[Key]
@@ -20,6 +19,7 @@ public class Supplier
 		set => _id = value;
 	}
 
+	[Required]
 	public string Name
 	{
 		get => _name;
@@ -32,6 +32,7 @@ public class Supplier
 		set => _contact = value;
 	}
 
+	[Required]
 	public DateTime ContractStart
 	{
 		get => _contractStart;
@@ -44,12 +45,7 @@ public class Supplier
 		set => _contractEnd = value;
 	}
 
-	public List<string> providedBooks
-	{
-		get => _providedBooks;
-		set => _providedBooks = value;
-	}
-
+	[Required]
 	public string ContractStatus
 	{
 		get => _contractStatus;
