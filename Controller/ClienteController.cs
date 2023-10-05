@@ -16,7 +16,7 @@ namespace Biblioteca_API.Controllers
         {
             _context = context;
         }
-        
+
         [HttpPost]
         [Route("new-client")]
         public async Task<IActionResult> NewClient([FromForm] Client client)
@@ -51,5 +51,40 @@ namespace Biblioteca_API.Controllers
         {
             return await _context.Client.ToListAsync();
         }
-    }
+        [HttpPut]
+        [Route("update-client/{id}")]
+        public IActionResult UpdateClient([FromRoute] int id, Client updateClient)
+        {
+            var client = _context.Client.Find(id);
+            if (client == null)
+                return NotFound();
+            client.Cpf = updateClient.Cpf;
+            client.Name = updateClient.Name;
+            client.Email = updateClient.Email;
+            client.PhoneNumber = updateClient.PhoneNumber;
+            client.BorrowedBookCount = updateClient.BorrowedBookCount;
+            client.RegistrationDate = updateClient.RegistrationDate;
+            client.Owing = updateClient.Owing;
+
+            _context.Client.Update(client);
+            _context.SaveChanges();
+
+            return Ok(client);
+        }// n ta funcionando direito
+
+
+        [HttpDelete]
+        [Route("delete-client/{id}")]
+        public IActionResult DeleteLibrary([FromRoute] int id)
+        {
+            var client = _context.Client.Find(id);
+            if (client == null)
+                return NotFound();
+
+            _context.Client.Remove(client);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+    } // funcionado
 }

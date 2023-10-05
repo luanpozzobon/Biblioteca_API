@@ -46,5 +46,38 @@ namespace Biblioteca_API.Controller
 
             return Ok(suppliers); // Use Ok() para retornar 200 OK com os dados
         }
+
+        [HttpDelete]
+        [Route("delete-supplier/{id}")] // Note que definimos o tipo de parâmetro como int para maior segurança
+        public async Task<IActionResult> DeleteSupplier([FromRoute] int id)
+        {
+            var supplier = await _context.Supplier.FindAsync(id);
+            if (supplier == null)
+                return NotFound();
+
+            _context.Supplier.Remove(supplier);
+            await _context.SaveChangesAsync();
+
+            return Ok(supplier);
+        }
+        [HttpPut]
+        [Route("update-supplier/{id}")]
+        public async Task<IActionResult> UpdateSupplier([FromRoute] int id, [FromForm] Supplier updateSupplier)
+        {
+            var supplier = await _context.Supplier.FindAsync(id);
+            if (supplier == null)
+                return NotFound();
+
+            supplier.Name = updateSupplier.Name;
+            supplier.Contact = updateSupplier.Contact;
+            supplier.ContractStart = updateSupplier.ContractStart;
+            supplier.ContractEnd = updateSupplier.ContractEnd;
+            supplier.ContractStatus = updateSupplier.ContractStatus;
+
+            _context.Supplier.Update(supplier);
+            await _context.SaveChangesAsync();
+
+            return Ok(supplier);
+        }
     }
 }

@@ -63,7 +63,7 @@ namespace Biblioteca_API.Controllers
             _context.SaveChanges();
 
             return Ok(library);
-        }
+        } 
 
         [HttpDelete]
         [Route("delete-library/{id}")]
@@ -77,6 +77,6 @@ namespace Biblioteca_API.Controllers
             _context.SaveChanges();
 
             return NoContent();
-        }
+        } 
     }
 }    

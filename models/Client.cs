@@ -12,7 +12,6 @@ namespace Biblioteca_API.models
         public string? Name {get; set;}
         public string? Email {get; set;}
         public string? PhoneNumber {get; set;}
-        public DateTime BirthDate {get; set;}
         public string? BorrowedBookCount { get; set; }
         public DateTime RegistrationDate { get; set; }
         public bool Owing { get; set; }

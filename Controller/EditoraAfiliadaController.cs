@@ -61,6 +61,24 @@ namespace Biblioteca_API.controllers
 
             return NoContent();
         }
+        [HttpPut]
+        [Route("update-editoraAfiliada/{id}")]
+        public IActionResult UpdateEditoraAfiliadas([FromRoute] int id, EditoraAfiliada updateEditoraAfiliada)
+        {
+            var editoraAfiliadas = _context.EditorasAfiliadas.Find(id);
+            if (editoraAfiliadas == null)
+                return NotFound();
+            editoraAfiliadas.autores = editoraAfiliadas.autores;
+            editoraAfiliadas.qtdLivrosPublicados = editoraAfiliadas.qtdLivrosPublicados;
+            editoraAfiliadas.Id = editoraAfiliadas.Id;
+            editoraAfiliadas.contato = editoraAfiliadas.contato;
+ 
+            _context.EditorasAfiliadas.Update(editoraAfiliadas);
+            _context.SaveChanges();
+
+            return Ok(editoraAfiliadas);
+        }// n ta funcionando direito
+
 
     }
 }

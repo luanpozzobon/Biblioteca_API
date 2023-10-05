@@ -53,5 +53,39 @@ namespace Biblioteca_API.Controllers
         {
             return await _context.Worker.ToListAsync();
         }
-    }
+        
+        [HttpPut]
+        [Route("update-client/{id}")]
+        public IActionResult UpdateWorker([FromRoute] int id, Worker updateWorker)
+        {
+            var worker = _context.Worker.Find(id);
+            if (worker == null)
+                return NotFound();
+            worker.Cpf = updateWorker.Cpf;
+            worker.Name = updateWorker.Name;
+            worker.Email = updateWorker.Email;
+            worker.Phone = updateWorker.Phone;
+            worker.Cargo= updateWorker.Cargo;
+
+            _context.Worker.Update(worker);
+            _context.SaveChanges();
+
+            return Ok(worker);
+        }// n ta funcionando direito
+
+
+        [HttpDelete]
+        [Route("delete-worker/{id}")]
+        public IActionResult DeleteLibrary([FromRoute] int id)
+        {
+            var worker = _context.Worker.Find(id);
+            if (worker == null)
+                return NotFound();
+
+            _context.Worker.Remove(worker);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+    } // funcionado
 }

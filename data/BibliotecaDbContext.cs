@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Biblioteca_API.data;
 
 public class BibliotecaDbContext : DbContext {
-    public DbSet<StudyRoom>? StudyRoom {get; set;}
-    public DbSet<Supplier>? Supplier {get; set;}
-    public DbSet<Emprestimo>? Emprestimo {get; set;}
+    public DbSet<StudyRoom> StudyRoom {get; set;}
+    public DbSet<Supplier> Supplier {get; set;}
+    public DbSet<Emprestimo> Emprestimo {get; set;}
     public DbSet<EditoraAfiliada> EditorasAfiliadas { get; set;}
     public DbSet<Book> Book { get; set;}
     public DbSet<Client> Client {get; set;}
