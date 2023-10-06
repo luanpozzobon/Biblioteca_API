@@ -1,4 +1,4 @@
-/*using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Biblioteca_API.models;
 using Biblioteca_API.data;
 using System.Linq;
@@ -21,12 +21,12 @@ namespace Biblioteca_API.Controllers
 
         [HttpPost]
         [Route("new-worker")]
-        public async Task<IActionResult> NewWorker(Worker worker)
+        public async Task<IActionResult> NewWorker([FromForm] Worker worker)
         {
-            if (worker == null || string.IsNullOrEmpty(worker.CPF))
+            if (worker == null || string.IsNullOrEmpty(worker.Cpf))
                 return BadRequest("Worker data is invalid.");
 
-            var existingWorker = await _context.Worker.FirstOrDefaultAsync(w => w.CPF == worker.CPF);
+            var existingWorker = await _context.Worker.FirstOrDefaultAsync(w => w.Cpf == worker.Cpf);
             if (existingWorker != null)
                 return BadRequest("A worker with this CPF already exists.");
 
@@ -53,6 +53,30 @@ namespace Biblioteca_API.Controllers
         {
             return await _context.Worker.ToListAsync();
         }
-    }
+        
+        [HttpPut]
+        [Route("update-worker")]
+        public IActionResult UpdateWorker([FromForm] Worker updateWorker)
+        {
+            _context.Worker.Update(updateWorker);
+            _context.SaveChanges();
+
+            return Ok(updateWorker);
+        }// n ta funcionando direito
+
+
+        [HttpDelete]
+        [Route("delete-worker/{id}")]
+        public IActionResult DeleteLibrary([FromRoute] int id)
+        {
+            var worker = _context.Worker.Find(id);
+            if (worker == null)
+                return NotFound();
+
+            _context.Worker.Remove(worker);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+    } // funcionado
 }
-*/

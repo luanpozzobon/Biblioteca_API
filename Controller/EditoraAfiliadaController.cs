@@ -61,6 +61,16 @@ namespace Biblioteca_API.controllers
 
             return NoContent();
         }
+        [HttpPut]
+        [Route("update-editoraAfiliada")]
+        public IActionResult UpdateEditoraAfiliadas([FromForm] EditoraAfiliada updateEditoraAfiliada)
+        {
+            _context.EditorasAfiliadas.Update(updateEditoraAfiliada);
+            _context.SaveChanges();
+
+            return Ok(updateEditoraAfiliada);
+        }
+
 
     }
 }

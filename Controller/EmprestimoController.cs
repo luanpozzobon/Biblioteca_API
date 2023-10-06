@@ -1,4 +1,4 @@
-/*
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Biblioteca_API.models;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Biblioteca_API.Controller
 {
     [ApiController]
-    [Route("")]
+    [Route("api/[controller]")]
     public class EmprestimoController : ControllerBase 
     {
         private readonly BibliotecaDbContext _context;
@@ -27,21 +27,16 @@ namespace Biblioteca_API.Controller
         [HttpGet("porLivro/{livroId}")]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimosPorLivro(int livroId)
         {
-            var emprestimos = await _context.Emprestimo
-                .Where(e => e.Book.Id == livroId)
-                .ToListAsync();
+            var emprestimos = await _context.Emprestimo.Where(e => e.livro == livroId).ToListAsync();
 
-            if (emprestimos == null || emprestimos.Count == 0)
-            {
-                return NotFound();
-            }
+            if (emprestimos == null || emprestimos.Count == 0) { return NotFound(); }
 
             return emprestimos;
         }
 
 
         [HttpPost]
-        public async Task<ActionResult<Emprestimo>> PostEmprestimo(Emprestimo emprestimo)
+        public async Task<ActionResult<Emprestimo>> PostEmprestimo([FromForm]Emprestimo emprestimo)
         {
             _context.Emprestimo.Add(emprestimo);
             await _context.SaveChangesAsync();
@@ -51,4 +46,3 @@ namespace Biblioteca_API.Controller
 
     }
 }
-*/

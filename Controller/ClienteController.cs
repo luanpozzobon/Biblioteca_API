@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Biblioteca_API.models;
 using Biblioteca_API.data;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Biblioteca_API.Controllers
 {
@@ -19,7 +16,7 @@ namespace Biblioteca_API.Controllers
         {
             _context = context;
         }
-        
+
         [HttpPost]
         [Route("new-client")]
         public async Task<IActionResult> NewClient([FromForm] Client client)
@@ -54,5 +51,30 @@ namespace Biblioteca_API.Controllers
         {
             return await _context.Client.ToListAsync();
         }
-    }
+        [HttpPut]
+        [Route("update-client")]
+        public IActionResult UpdateClient([FromForm] Client updateClient)
+        {
+
+            _context.Client.Update(updateClient);
+            _context.SaveChanges();
+
+            return Ok(updateClient);
+        }
+
+
+        [HttpDelete]
+        [Route("delete-client/{id}")]
+        public IActionResult DeleteLibrary([FromRoute] int id)
+        {
+            var client = _context.Client.Find(id);
+            if (client == null)
+                return NotFound();
+
+            _context.Client.Remove(client);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+    } // funcionado
 }

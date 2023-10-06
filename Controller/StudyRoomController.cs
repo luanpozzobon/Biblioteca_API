@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 [Route("/study-room")]
 public class StudyRoomController : ControllerBase
 {
-    private BibliotecaDbContext _context;
+    private readonly BibliotecaDbContext _context;
 
     public StudyRoomController(BibliotecaDbContext context)
     {
@@ -16,13 +16,16 @@ public class StudyRoomController : ControllerBase
 
     [HttpPost]
     [Route("new-room")]
-    public IActionResult NewRoom(StudyRoom studyRoom)
+    public async Task<IActionResult> NewRoom([FromForm] StudyRoom studyRoom)
     {
-        if (studyRoom == null)
+        if (_context is null || _context.StudyRoom is null)
+            return NotFound();
+
+        if (studyRoom is null)
             return BadRequest();
 
-        _context.Add(studyRoom);
-        _context.SaveChanges();
+        await _context.AddAsync(studyRoom);
+        await _context.SaveChangesAsync();
         return Created("Criada nova sala de estudo!", studyRoom);
     }
 
@@ -30,25 +33,21 @@ public class StudyRoomController : ControllerBase
     [Route("free-rooms")]
     public async Task<ActionResult<IEnumerable<StudyRoom>>> FreeRooms()
     {
-        if (_context is null)
+        if (_context is null || _context.StudyRoom is null)
             return NotFound();
-        if (_context.StudyRoom is null)
-            return NotFound();
-
+        
         return await _context.StudyRoom
             .Where(room => room.IsAvailable)
             .ToListAsync();
     }
 
     [HttpGet]
-    [Route("room/{number}")]
-    public async Task<ActionResult<StudyRoom>> SearchRoom([FromRoute] int number)
+    [Route("number")]
+    public async Task<ActionResult<StudyRoom>> SearchRoom(int number)
     {
-        if (_context is null)
+        if (_context is null || _context.StudyRoom is null)
             return NotFound();
-        if (_context.StudyRoom is null)
-            return NotFound();
-
+        
         var room = await _context.StudyRoom.FindAsync(number);
         if (room is null)
             return NotFound();
@@ -56,16 +55,29 @@ public class StudyRoomController : ControllerBase
         return room;
     }
 
-    [HttpPatch]
-    [Route("change-occupation/{number}")]
-    public async Task<ActionResult> ChangeOccupation([FromRoute] int number)
+    [HttpGet]
+    [Route("capacity")]
+    public async Task<ActionResult<IEnumerable<StudyRoom>>> FindRoomsByCapacity(int capacity)
     {
-        if (_context is null)
-            return NotFound();
-        if (_context.StudyRoom is null)
+        if (_context is null || _context.StudyRoom is null)
             return NotFound();
 
+        return await _context.StudyRoom
+            .Where (room => room.IsAvailable)
+            .Where (room => room.Capacity >= capacity)
+            .ToListAsync();
+    }
+
+    [HttpPatch]
+    [Route("change-occupation")]
+    public async Task<ActionResult> ChangeOccupation(int number)
+    {
+        if (_context is null || _context.StudyRoom is null)
+            return NotFound();
+        
         var room = await _context.StudyRoom.FindAsync(number);
+        if (room is null)
+            return NotFound();
 
         room.IsAvailable = !room.IsAvailable;
         _context.StudyRoom.Update(room);

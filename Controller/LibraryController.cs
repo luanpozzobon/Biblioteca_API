@@ -19,7 +19,7 @@ namespace Biblioteca_API.Controllers
 
         [HttpPost]
         [Route("new-library")]
-        public IActionResult NewLibrary([FromForm]Library biblioteca)
+        public IActionResult NewLibrary([FromForm] Library biblioteca)
         {
             if (biblioteca == null)
                 return BadRequest();
@@ -49,21 +49,14 @@ namespace Biblioteca_API.Controllers
         }
 
         [HttpPut]
-        [Route("update-library/{id}")]
-        public IActionResult UpdateLibrary([FromRoute] int id, Library updatedLibrary)
+        [Route("update-library")]
+        public IActionResult UpdateLibrary([FromForm] Library updatedLibrary)
         {
-            var library = _context.Library.Find(id);
-            if (library == null)
-                return NotFound();
-
-            library.QuantEmployees = updatedLibrary.QuantEmployees;
-            library.QuantBook = updatedLibrary.QuantBook;
-
-            _context.Library.Update(library);
+            _context.Library.Update(updatedLibrary);
             _context.SaveChanges();
 
-            return Ok(library);
-        }
+            return Ok(updatedLibrary);
+        } 
 
         [HttpDelete]
         [Route("delete-library/{id}")]
@@ -77,6 +70,6 @@ namespace Biblioteca_API.Controllers
             _context.SaveChanges();
 
             return NoContent();
-        }
+        } 
     }
 }    
