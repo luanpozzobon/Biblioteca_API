@@ -3,6 +3,7 @@ using System;
 using Biblioteca_API.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Biblioteca_API.Migrations
 {
     [DbContext(typeof(BibliotecaDbContext))]
-    partial class BibliotecaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231006024512_Emprestimo")]
+    partial class Emprestimo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -124,32 +127,6 @@ namespace Biblioteca_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Emprestimo");
-                });
-
-            modelBuilder.Entity("Biblioteca_API.models.Event", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DataDoEvento")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Editora")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Livro")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("QuantidadeDePessoa")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("ValorDoEvento")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("Biblioteca_API.models.Library", b =>

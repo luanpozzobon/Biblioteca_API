@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hytlwY7y64gWyEPaDgZN3Huugof4xCoFDBkuhDY1oCTvr9+A2Nh3fPSWp6MrJqPJwnD6VeaxrWzZnAaQeQu/dg==",
+  "dgSpecHash": "g6o6RrGw5eVF20Q9vb6i1SineVmmwpaH+NEJzLHKJiRJCutaXqpYw6rEX6JWwYsuZ8OLqlM2oi9usUWWMydyOw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Gui\\OneDrive\\Documentos\\trabalhoBiblioteca\\Biblioteca_API\\Biblioteca_API.csproj",
+  "projectFilePath": "C:\\Users\\Gui\\OneDrive\\Documentos\\trabalhoBiblioteca\\Biblioteca_Api\\Biblioteca_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Gui\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Gui\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.5\\microsoft.aspnetcore.openapi.7.0.5.nupkg.sha512",

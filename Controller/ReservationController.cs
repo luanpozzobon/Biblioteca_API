@@ -70,7 +70,7 @@ namespace Biblioteca_API.Controllers
             return await _context.Reservation.ToListAsync();
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("check-reservations")]
         public async Task<IActionResult> CheckReservations()
         {

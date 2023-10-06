@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 namespace Biblioteca_API.controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("editora")]
     public class EditoraAfiliadaController : ControllerBase
     {
         private readonly BibliotecaDbContext _context;
@@ -18,15 +18,36 @@ namespace Biblioteca_API.controllers
             _context = context;
         }
 
+        [HttpPost]
+        [Route("new")]
+        public async Task<ActionResult<EditoraAfiliada>> PostEditoraAfiliada([FromForm]EditoraAfiliada editoraAfiliada)
+        {
+            if (_context is null || _context.EditorasAfiliadas is null)
+                return NotFound();
+
+            _context.EditorasAfiliadas.Add(editoraAfiliada);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetEditoraAfiliada", new { id = editoraAfiliada.Id }, editoraAfiliada);
+        }
+
         [HttpGet]
+        [Route("all")]
         public async Task<ActionResult<IEnumerable<EditoraAfiliada>>> GetEditorasAfiliadas()
         {
+            if (_context is null || _context.EditorasAfiliadas is null)
+                return NotFound();
+
             return await _context.EditorasAfiliadas.ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id}")]
         public async Task<ActionResult<EditoraAfiliada>> GetEditoraAfiliada(int id)
         {
+            if (_context is null || _context.EditorasAfiliadas is null)
+                return NotFound();
+
             var editoraAfiliada = await _context.EditorasAfiliadas.FindAsync(id);
 
             if (editoraAfiliada == null)
@@ -37,19 +58,26 @@ namespace Biblioteca_API.controllers
             return editoraAfiliada;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<EditoraAfiliada>> PostEditoraAfiliada([FromForm]EditoraAfiliada editoraAfiliada)
+        [HttpPut]
+        [Route("update-editoraAfiliada")]
+        public IActionResult UpdateEditoraAfiliadas([FromForm] EditoraAfiliada updateEditoraAfiliada)
         {
-            _context.EditorasAfiliadas.Add(editoraAfiliada);
-            await _context.SaveChangesAsync();
+            if (_context is null || _context.EditorasAfiliadas is null)
+                return NotFound();
 
-            return CreatedAtAction("GetEditoraAfiliada", new { id = editoraAfiliada.Id }, editoraAfiliada);
+            _context.EditorasAfiliadas.Update(updateEditoraAfiliada);
+            _context.SaveChanges();
+
+            return Ok(updateEditoraAfiliada);
         }
 
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEditoraAfiliada(int id)
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> DeleteEditoraAfiliada([FromRoute] int id)
         {
+            if (_context is null || _context.EditorasAfiliadas is null)
+                return NotFound();
+
             var editoraAfiliada = await _context.EditorasAfiliadas.FindAsync(id);
             if (editoraAfiliada == null)
             {
@@ -61,16 +89,5 @@ namespace Biblioteca_API.controllers
 
             return NoContent();
         }
-        [HttpPut]
-        [Route("update-editoraAfiliada")]
-        public IActionResult UpdateEditoraAfiliadas([FromForm] EditoraAfiliada updateEditoraAfiliada)
-        {
-            _context.EditorasAfiliadas.Update(updateEditoraAfiliada);
-            _context.SaveChanges();
-
-            return Ok(updateEditoraAfiliada);
-        }
-
-
     }
 }

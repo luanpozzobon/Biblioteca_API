@@ -62,7 +62,7 @@ namespace Biblioteca_API.Controllers
             _context.SaveChanges();
 
             return Ok(updateWorker);
-        }// n ta funcionando direito
+        }
 
 
         [HttpDelete]

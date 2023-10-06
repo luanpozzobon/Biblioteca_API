@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Biblioteca_API.Controller
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("emprestimo")]
     public class EmprestimoController : ControllerBase 
     {
         private readonly BibliotecaDbContext _context;
@@ -19,15 +19,23 @@ namespace Biblioteca_API.Controller
         }
 
         [HttpGet]
+        [Route("all")]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimos()
         {
+            if (_context is null || _context.Emprestimo is null)
+                return NotFound();
+                
             return await _context.Emprestimo.ToListAsync();
         }
 
-        [HttpGet("porLivro/{livroId}")]
+        [HttpGet]
+        [Route("findById/{id}")]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimosPorLivro(int livroId)
         {
-            var emprestimos = await _context.Emprestimo.Where(e => e.livro == livroId).ToListAsync();
+            if (_context is null || _context.Emprestimo is null)
+                return NotFound();
+                
+            var emprestimos = await _context.Emprestimo.Where(e => e.BookId == livroId).ToListAsync();
 
             if (emprestimos == null || emprestimos.Count == 0) { return NotFound(); }
 
@@ -36,13 +44,35 @@ namespace Biblioteca_API.Controller
 
 
         [HttpPost]
-        public async Task<ActionResult<Emprestimo>> PostEmprestimo([FromForm]Emprestimo emprestimo)
+        [Route("new")]
+        public async Task<ActionResult<Emprestimo>> PostEmprestimo([FromForm] Emprestimo emprestimo)
         {
+            if (_context is null || _context.Emprestimo is null)
+                return NotFound();
+            
             _context.Emprestimo.Add(emprestimo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmprestimo", new { id = emprestimo.Id }, emprestimo);
+            return Created("Emprestimo criado com sucesso!", emprestimo);
         }
+
+
+        [HttpDelete]
+        [Route("delete-emprestimo/{id}")]
+        public IActionResult DeleteEmprestimo([FromRoute] int id)
+        {
+            if (_context is null || _context.Emprestimo is null)
+                return NotFound();
+
+            var emprestimo = _context.Emprestimo.Find(id);
+            if (emprestimo == null)
+                return NotFound();
+
+            _context.Emprestimo.Remove(emprestimo);
+            _context.SaveChanges();
+
+            return NoContent();
+        } 
 
     }
 }

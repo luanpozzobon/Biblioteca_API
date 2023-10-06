@@ -8,11 +8,9 @@ namespace Biblioteca_API.models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int pessoa { get; set; }
-        public int livro { get; set; }
-        public DateTime dataDeEmprestimo { get; set; }
-        public DateTime dataDeDevolucao { get; set; }
-        public string ? status { get; set; }
-        public double valor { get; set; }
+        public int ClientId { get; set; }
+        public int BookId { get; set; }
+        public DateTime DataDeEmprestimo { get; set; }
+        public DateTime DataDeDevolucao { get; set; }
     }
 }
