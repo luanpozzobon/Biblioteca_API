@@ -16,7 +16,7 @@ public class StudyRoomController : ControllerBase
 
     [HttpPost]
     [Route("new-room")]
-    public async Task<IActionResult> NewRoom([FromForm] StudyRoom studyRoom)
+    public async Task<IActionResult> NewRoom([FromBody] StudyRoom studyRoom)
     {
         if (_context is null || _context.StudyRoom is null)
             return NotFound();
@@ -27,6 +27,17 @@ public class StudyRoomController : ControllerBase
         await _context.AddAsync(studyRoom);
         await _context.SaveChangesAsync();
         return Created("Criada nova sala de estudo!", studyRoom);
+    }
+
+    [HttpGet]
+    [Route("")]
+    public async Task<ActionResult<IEnumerable<StudyRoom>>> AllRooms()
+    {
+        if (_context is null || _context.StudyRoom is null)
+            return NotFound();
+        
+        var studyRooms = await _context.StudyRoom.ToListAsync();
+        return Ok(studyRooms);
     }
 
     [HttpGet]
@@ -42,7 +53,7 @@ public class StudyRoomController : ControllerBase
     }
 
     [HttpGet]
-    [Route("number")]
+    [Route("{number}")]
     public async Task<ActionResult<StudyRoom>> SearchRoom(int number)
     {
         if (_context is null || _context.StudyRoom is null)
@@ -56,7 +67,7 @@ public class StudyRoomController : ControllerBase
     }
 
     [HttpGet]
-    [Route("capacity")]
+    [Route("capacity/{capacity}")]
     public async Task<ActionResult<IEnumerable<StudyRoom>>> FindRoomsByCapacity(int capacity)
     {
         if (_context is null || _context.StudyRoom is null)
@@ -69,7 +80,7 @@ public class StudyRoomController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("change-occupation")]
+    [Route("change-occupation/{number}")]
     public async Task<ActionResult> ChangeOccupation(int number)
     {
         if (_context is null || _context.StudyRoom is null)
