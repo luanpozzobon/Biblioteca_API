@@ -19,7 +19,7 @@ public class BookController : ControllerBase
 
     [HttpPost]
     [Route("new-book")]
-    public IActionResult NewBook([FromForm]Book book)
+    public async Task<IActionResult> NewBook([FromForm]Book book)
     {
         if (book == null)
             return BadRequest();
