@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Biblioteca_API.models.Dto;
 
 namespace Biblioteca_API.Controller
 {
@@ -24,7 +25,7 @@ namespace Biblioteca_API.Controller
 
         [HttpPost]
         [Route("new")]
-        public async Task<IActionResult> NewSupplier([FromForm] Supplier supplier)
+        public async Task<IActionResult> NewSupplier([FromBody] Supplier supplier)
         {
             if (_context is null || _context.Supplier is null)
                 return NotFound();
@@ -97,25 +98,22 @@ namespace Biblioteca_API.Controller
 
         [HttpPatch]
         [Route("modify-contract")]
-        public async Task<ActionResult<Supplier>> ChangeSupplierContract([Required][FromForm] int id, 
-                                                                         [Required][FromForm] bool contractStatus,
-                                                                         [FromForm] DateTime? contractStart,
-                                                                         [FromForm] DateTime? contractEnd)
+        public async Task<ActionResult<Supplier>> ChangeSupplierContract([FromBody] SupplierContract supplierContract)
         {
             if (_context is null || _context.Supplier is null)
                 return NotFound();
-            if (id <= 0) 
+            if (supplierContract.id <= 0) 
                 return BadRequest("Id indicado fora do range!");
             
-            var supplier = await _context.Supplier.FindAsync(id);
+            var supplier = await _context.Supplier.FindAsync(supplierContract.id);
             if (supplier is null)
                 return NotFound();
-            supplier.ContractStatus = contractStatus;
+            supplier.ContractStatus = supplierContract.contractStatus;
 
-            if (contractStart.HasValue)
-                supplier.ContractStart = contractStart.Value;
-            if (contractEnd.HasValue)
-                supplier.ContractEnd = contractEnd.Value;
+            if (supplierContract.contractStart.HasValue)
+                supplier.ContractStart = supplierContract.contractStart.Value;
+            if (supplierContract.contractEnd.HasValue)
+                supplier.ContractEnd = supplierContract.contractEnd.Value;
 
             _context.Supplier.Update(supplier);
             await _context.SaveChangesAsync();
