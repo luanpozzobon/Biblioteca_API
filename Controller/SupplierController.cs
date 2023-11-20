@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Biblioteca_API.models.Dto;
+using SQLitePCL;
 
 namespace Biblioteca_API.Controller
 {
@@ -35,6 +36,17 @@ namespace Biblioteca_API.Controller
             await _context.AddAsync(supplier);
             await _context.SaveChangesAsync();
             return Created("Adicionado novo fornecedor", supplier);
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<ActionResult<IEnumerable<Supplier>>> AllSuppliers()
+        {
+            if (_context is null || _context.Supplier is null)
+                return NotFound();
+
+            var suppliers = await _context.Supplier.ToListAsync();
+            return Ok(suppliers);
         }
 
         [HttpGet]
@@ -84,7 +96,7 @@ namespace Biblioteca_API.Controller
 
         [HttpPut]
         [Route("modify")]
-        public async Task<ActionResult<Supplier>> ModifySupplier([FromForm] Supplier supplier)
+        public async Task<ActionResult<Supplier>> ModifySupplier([FromBody] Supplier supplier)
         {
             if (_context is null || _context.Supplier is null)
                 return NotFound();
