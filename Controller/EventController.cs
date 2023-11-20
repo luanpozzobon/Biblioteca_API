@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Biblioteca_API.controllers
 {
-    [Route("api/[controller]")]
+    [Route("events")]
     [ApiController]
     public class EventController : ControllerBase
     {
@@ -51,7 +51,7 @@ namespace Biblioteca_API.controllers
         // POST: api/Event
         [HttpPost]
         [Route("new")]
-        public async Task<ActionResult<Event>> PostEvent([FromForm]Event evento)
+        public async Task<ActionResult<Event>> PostEvent([FromBody]Event evento)
         {
             if (_context is null || _context.Event is null)
                 return NotFound();

@@ -2,12 +2,8 @@
 using Biblioteca_API.models;
 using Biblioteca_API.data;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Biblioteca_API.models.Dto;
 
 namespace Biblioteca_API.Controller
 {
@@ -24,7 +20,7 @@ namespace Biblioteca_API.Controller
 
         [HttpPost]
         [Route("new")]
-        public async Task<IActionResult> NewSupplier([FromForm] Supplier supplier)
+        public async Task<IActionResult> NewSupplier([FromBody] Supplier supplier)
         {
             if (_context is null || _context.Supplier is null)
                 return NotFound();
@@ -34,6 +30,19 @@ namespace Biblioteca_API.Controller
             await _context.AddAsync(supplier);
             await _context.SaveChangesAsync();
             return Created("Adicionado novo fornecedor", supplier);
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<ActionResult<IEnumerable<Supplier>>> AllSuppliers()
+        {
+            if (_context is null || _context.Supplier is null)
+                return NotFound();
+
+            var suppliers = await _context.Supplier
+                .ToListAsync();
+
+            return Ok(suppliers);
         }
 
         [HttpGet]
@@ -83,7 +92,7 @@ namespace Biblioteca_API.Controller
 
         [HttpPut]
         [Route("modify")]
-        public async Task<ActionResult<Supplier>> ModifySupplier([FromForm] Supplier supplier)
+        public async Task<ActionResult<Supplier>> ModifySupplier([FromBody] Supplier supplier)
         {
             if (_context is null || _context.Supplier is null)
                 return NotFound();
@@ -97,25 +106,22 @@ namespace Biblioteca_API.Controller
 
         [HttpPatch]
         [Route("modify-contract")]
-        public async Task<ActionResult<Supplier>> ChangeSupplierContract([Required][FromForm] int id, 
-                                                                         [Required][FromForm] bool contractStatus,
-                                                                         [FromForm] DateTime? contractStart,
-                                                                         [FromForm] DateTime? contractEnd)
+        public async Task<ActionResult<Supplier>> ChangeSupplierContract([FromBody] SupplierContract contract)
         {
             if (_context is null || _context.Supplier is null)
                 return NotFound();
-            if (id <= 0) 
+            if (contract.id <= 0)
                 return BadRequest("Id indicado fora do range!");
-            
-            var supplier = await _context.Supplier.FindAsync(id);
+
+            var supplier = await _context.Supplier.FindAsync(contract.id);
             if (supplier is null)
                 return NotFound();
-            supplier.ContractStatus = contractStatus;
+            supplier.ContractStatus = contract.contractStatus;
 
-            if (contractStart.HasValue)
-                supplier.ContractStart = contractStart.Value;
-            if (contractEnd.HasValue)
-                supplier.ContractEnd = contractEnd.Value;
+            if (contract.contractStart.HasValue)
+                supplier.ContractStart = contract.contractStart.Value;
+            if (contract.contractEnd.HasValue)
+                supplier.ContractEnd = contract.contractEnd.Value;
 
             _context.Supplier.Update(supplier);
             await _context.SaveChangesAsync();
