@@ -25,7 +25,7 @@ public class BookController : ControllerBase
             return BadRequest();
 
         _context.Add(book);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Created("Novo livro cadastrado!", book);
     }
 

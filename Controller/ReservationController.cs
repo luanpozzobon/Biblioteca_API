@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Biblioteca_API.models.Dto;
 
 namespace Biblioteca_API.Controllers
 {
@@ -22,20 +23,20 @@ namespace Biblioteca_API.Controllers
 
         [HttpPost]
         [Route("new-reservation")]
-        public async Task<IActionResult> NewReservation([Required][FromForm] int clientId, [Required][FromForm] int bookId)
+        public async Task<IActionResult> NewReservation([FromBody] ReservationRequest reservationReq)
         {
             if (_context is null || _context.Reservation is null)
                 return NotFound();
 
-            if (clientId <= 0)
+            if (reservationReq.clientId <= 0)
                 return BadRequest("Id do cliente fora do range");
-            if (bookId <= 0)
+            if (reservationReq.bookId <= 0)
                 return BadRequest("Id do livro fora do range");
 
-            var client = await _context.Client.FindAsync(clientId);
+            var client = await _context.Client.FindAsync(reservationReq.clientId);
             if (client is null)
                 return NotFound("Cliente não encontrado!");
-            var book = await _context.Book.FindAsync(bookId);
+            var book = await _context.Book.FindAsync(reservationReq.bookId);
             if (book is null)
                 return NotFound("Livro não encontrado!");
 
@@ -91,6 +92,31 @@ namespace Biblioteca_API.Controllers
 
             await _context.SaveChangesAsync();
             return Ok("Reservations checked and updated.");
+        }
+
+        [HttpPut]
+        [Route("cancel-reservation/{id}")]
+        public async Task<IActionResult> CancelReservation(int id)
+        {
+            var reservation = await _context.Reservation.FindAsync(id);
+            if (reservation == null)
+                return NotFound("Reserva não encontrada!");
+
+            if (reservation.Status != "Reservado")
+                return BadRequest("Esta reserva não pode ser cancelada.");
+
+            var book = await _context.Book.FindAsync(reservation.BookId);
+            if (book != null)
+            {
+                book.QuantStock++;
+                _context.Update(book);
+            }
+
+            reservation.Status = "Cancelado";
+            _context.Update(reservation);
+            await _context.SaveChangesAsync();
+
+            return Ok("Reserva cancelada com sucesso!");
         }
     }
 }
